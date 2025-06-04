@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->string('codigo_proyecto')->unique(); // Tu ID personalizado
             $table->string('nombre');
             $table->timestamps();
         });

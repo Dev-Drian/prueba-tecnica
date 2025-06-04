@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('piece_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
-            $table->foreignId('piece_id')->constrained()->onDelete('cascade'); 
-            $table->decimal('real_weight', 8, 2); 
-            $table->decimal('difference', 8, 2)->nullable(); 
-            $table->timestamp('recorded_at')->useCurrent(); 
+            $table->string('codigo_registro')->unique(); 
+            $table->foreignId('proyecto_id')->constrained('proyectos');
+            $table->foreignId('bloque_id')->constrained('bloques');
+            $table->foreignId('pieza_id')->constrained('piezas');
+            $table->decimal('peso_real', 8, 2); 
+            $table->decimal('diferencia', 8, 2); 
+            $table->timestamp('fecha_hora'); 
+            $table->foreignId('user_id')->constrained('users'); 
+            $table->text('observaciones')->nullable();        
             $table->timestamps();
         });
     }

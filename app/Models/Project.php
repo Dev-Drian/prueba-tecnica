@@ -11,10 +11,16 @@ class Project extends Model
 
     protected  $guarded = [];
 
-    
+
     public function blocks()
     {
         return $this->hasMany(Block::class);
     }
+
+    public static function findByCode($codigo)
+    {
+        return self::where('codigo_proyecto', $codigo)->first();
+    }
+
 
 }

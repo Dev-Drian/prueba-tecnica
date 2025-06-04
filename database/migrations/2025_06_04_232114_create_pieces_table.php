@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('pieces', function (Blueprint $table) {
             $table->id();
             $table->foreignId('block_id')->constrained()->onDelete('cascade'); 
-            $table->string('name'); 
-            $table->decimal('theoretical_weight', 8, 2); 
-            $table->enum('status', ['Pendiente', 'Fabricada'])->default('Pendiente'); 
+            $table->string('codigo_pieza')->unique(); 
+            $table->string('nombre');
+            $table->decimal('peso_teorico', 8, 2); 
+            $table->enum('estado', ['Pendiente', 'Fabricada', 'En_Proceso'])->default('Pendiente');
             $table->timestamps();
         });
     }

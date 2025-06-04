@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('blocks', function (Blueprint $table) {
             $table->id();
+            $table->string('codigo_bloque')->unique();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
-            $table->string('name');    
+            $table->string('nombre');
             $table->timestamps();
         });
     }
