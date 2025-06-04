@@ -20,5 +20,9 @@ class DatabaseSeeder extends Seeder
              'username' => 'prueba',
              'password' => Hash::make('password'),
          ]);
+
+        $this->call([
+            ProjectSeeder::class,
+        ]);
     }
 }
