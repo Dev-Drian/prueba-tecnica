@@ -9,17 +9,17 @@ class PieceRecord extends Model
 {
     use HasFactory;
 
-    protected  $guarded = [];
+    protected $guarded = [];
 
+    protected $with = ['piece', 'user'];
 
     public function user()
     {   
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 
     public function piece()
     {
-        return $this->belongsTo(Piece::class);
+        return $this->belongsTo(Piece::class, 'pieza_id');
     }
-
 }

@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\PieceController;
+use App\Http\Controllers\PieceRecordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +40,7 @@ Route::middleware([
 
     // Rutas de Piezas
     Route::resource('pieces', PieceController::class);
+
+    // Rutas de Registros de Piezas
+    Route::resource('piece-records', PieceRecordController::class);
 });

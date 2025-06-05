@@ -60,6 +60,9 @@
                                     <NavLink :href="route('pieces.index')" :active="route().current('pieces.*')">
                                         Piezas
                                     </NavLink>
+                                    <NavLink :href="route('piece-records.index')" :active="route().current('piece-records.*')">
+                                        Registros
+                                    </NavLink>
                                 </div>
                             </div>
 
@@ -116,6 +119,9 @@
                             </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('pieces.index')" :active="route().current('pieces.*')">
                                 Piezas
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('piece-records.index')" :active="route().current('piece-records.*')">
+                                Registros
                             </ResponsiveNavLink>
                         </div>
 
