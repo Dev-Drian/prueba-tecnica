@@ -12,7 +12,7 @@ class PieceFactory extends Factory
 
     public function definition(): array
     {
-        $estados = ['pendiente', 'en_proceso', 'fabricada'];
+        $estados = ['Pendiente', 'Fabricada', 'En_Proceso'];
         $estado = $this->faker->randomElement($estados);
         
         $fecha_fabricacion = null;
@@ -24,8 +24,9 @@ class PieceFactory extends Factory
             'codigo_pieza' => 'PZ-' . str_pad($this->faker->unique()->numberBetween(1, 9999), 4, '0', STR_PAD_LEFT),
             'nombre' => $this->faker->words(3, true),
             'estado' => $estado,
-            'fecha_fabricacion' => $fecha_fabricacion,
+            'peso_teorico' => 2,
             'block_id' => Block::factory(),
+            'usuario_id' =>1,
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'updated_at' => function (array $attributes) {
                 return $attributes['created_at'];
