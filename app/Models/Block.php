@@ -4,14 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Block extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected  $guarded = [];
+    protected $fillable = [
+        'codigo_bloque',
+        'nombre',
+        'project_id'
+    ];
 
-    
     public function project()
     {
         return $this->belongsTo(Project::class);
@@ -21,5 +25,4 @@ class Block extends Model
     {
         return $this->hasMany(Piece::class);
     }
-
 }

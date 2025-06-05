@@ -17,14 +17,12 @@ return new class extends Migration
             $table->string('codigo_pieza')->unique(); 
             $table->string('nombre');
             $table->decimal('peso_teorico', 8, 2); 
-            $table->enum('estado', ['Pendiente', 'Fabricada', 'En_Proceso'])->default('Pendiente');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
+            $table->enum('estado', ['Pendiente', 'Fabricada', 'En_Proceso'])->default('Pendiente');        
             $table->timestamps();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::dropIfExists('pieces');

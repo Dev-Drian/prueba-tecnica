@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\BlockController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,5 +30,9 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    // Rutas de Proyectos
     Route::resource('projects', ProjectController::class);
+
+    // Rutas de Bloques
+    Route::resource('blocks', BlockController::class);
 });

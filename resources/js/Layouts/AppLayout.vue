@@ -54,6 +54,9 @@
                                     <NavLink :href="route('projects.index')" :active="route().current('projects.*')" class="text-white hover:text-blue-100 transition duration-150 ease-in-out">
                                         Proyectos
                                     </NavLink>
+                                    <NavLink :href="route('blocks.index')" :active="route().current('blocks.*')" class="text-white hover:text-blue-100 transition duration-150 ease-in-out">
+                                        Bloques
+                                    </NavLink>
                                 </div>
                             </div>
 
@@ -196,6 +199,12 @@
                         <div class="pt-2 pb-3 space-y-1">
                             <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                 Dashboard
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('projects.index')" :active="route().current('projects.*')">
+                                Proyectos
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('blocks.index')" :active="route().current('blocks.*')">
+                                Bloques
                             </ResponsiveNavLink>
                         </div>
 
