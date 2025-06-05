@@ -11,6 +11,7 @@ import TextInput from '@/Components/TextInput.vue';
 defineProps({
     canResetPassword: Boolean,
     status: String,
+    error: String,
 });
 
 const form = useForm({
@@ -47,6 +48,11 @@ const submit = () => {
 
             <!-- Login Card -->
             <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+                <!-- Error Message -->
+                <div v-if="error" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <p class="text-sm font-medium text-red-800">{{ error }}</p>
+                </div>
+
                 <!-- Status Message -->
                 <div v-if="status" class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                     <p class="text-sm font-medium text-green-800">{{ status }}</p>
