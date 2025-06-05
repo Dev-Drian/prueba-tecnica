@@ -4,13 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Piece extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected  $guarded = [];
-
+    protected $fillable = [
+        'codigo_pieza',
+        'nombre',
+        'block_id'
+    ];
 
     public function block()
     {
@@ -21,5 +25,4 @@ class Piece extends Model
     {
         return $this->hasMany(PieceRecord::class);
     }
-
 }

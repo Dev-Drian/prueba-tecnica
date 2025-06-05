@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\BlockController;
+use App\Http\Controllers\PieceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +36,7 @@ Route::middleware([
 
     // Rutas de Bloques
     Route::resource('blocks', BlockController::class);
+
+    // Rutas de Piezas
+    Route::resource('pieces', PieceController::class);
 });

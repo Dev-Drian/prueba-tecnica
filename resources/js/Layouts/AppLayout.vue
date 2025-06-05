@@ -7,6 +7,7 @@
     import DropdownLink from '@/Components/DropdownLink.vue';
     import NavLink from '@/Components/NavLink.vue';
     import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+    import Alert from '@/Components/Alert.vue';
 
     defineProps({
         title: String,
@@ -138,7 +139,11 @@
 
                 <!-- Page Content -->
                 <main>
-                    <slot />
+                    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                        <Alert type="success" />
+                        <Alert type="error" />
+                        <slot />
+                    </div>
                 </main>
             </div>
         </div>

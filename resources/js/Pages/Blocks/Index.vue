@@ -7,7 +7,7 @@ import Banner from '@/Components/Banner.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import BlockDetailsModal from '@/Components/BlockDetailsModal.vue';
 import ActionButtons from '@/Components/ActionButtons.vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
     blocks: {
@@ -40,20 +40,27 @@ const handleEdit = (block) => {
 };
 
 const deleteBlock = () => {
-    try {
-        form.delete(route('blocks.destroy', blockToDelete.value.id), {
-            onSuccess: () => {
-                confirmingBlockDeletion.value = false;
-                blockToDelete.value = null;
-            },
-            onError: (errors) => {
-                console.error('Error al eliminar el bloque:', errors);
-            }
-        });
-    } catch (error) {
-        console.error('Error al eliminar el bloque:', error);
-    }
+    if (!blockToDelete.value) return;
+    
+    form.delete(route('blocks.destroy', blockToDelete.value.id), {
+        onSuccess: () => {
+            confirmingBlockDeletion.value = false;
+            blockToDelete.value = null;
+        },
+        onError: (errors) => {
+            console.error('Error al eliminar el bloque:', errors);
+        }
+    });
 };
+
+const closeBlockDetails = () => {
+    showingBlockDetails.value = false;
+    selectedBlock.value = null;
+};
+
+const paginationLinks = computed(() => {
+    return props.blocks.links.filter(link => link.url !== null);
+});
 </script>
 
 <template>
@@ -129,15 +136,14 @@ const deleteBlock = () => {
                                 </div>
                                 <div class="flex space-x-2">
                                     <Link
-                                        v-for="link in blocks.links"
+                                        v-for="link in paginationLinks"
                                         :key="link.label"
                                         :href="link.url"
                                         v-html="link.label"
                                         class="px-3 py-1 rounded-md text-sm"
                                         :class="{
                                             'bg-blue-600 text-white': link.active,
-                                            'bg-gray-100 text-gray-700 hover:bg-gray-200': !link.active,
-                                            'opacity-50 cursor-not-allowed': !link.url
+                                            'bg-gray-100 text-gray-700 hover:bg-gray-200': !link.active
                                         }"
                                     />
                                 </div>
@@ -153,7 +159,7 @@ const deleteBlock = () => {
             v-if="selectedBlock"
             :show="showingBlockDetails"
             :block="selectedBlock"
-            @close="showingBlockDetails = false"
+            @close="closeBlockDetails"
         />
 
         <!-- Modal de Confirmación de Eliminación -->
