@@ -11,29 +11,21 @@ const props = defineProps({
     old: {
         type: Object,
         default: () => ({})
-    },
-    errors: {
-        type: Object,
-        default: () => ({})
     }
 });
 
 const form = useForm({
-    codigo_pieza: props.old.codigo_pieza || '',
-    nombre: props.old.nombre || '',
-    block_id: props.old.block_id || '',
-    peso_teorico: props.old.peso_teorico || '',
-    estado: props.old.estado || 'Pendiente'
+    codigo_pieza: '',
+    nombre: '',
+    block_id: '',
+    peso_teorico: '',
+    estado: 'Pendiente'
 });
 
-const submit = (formData) => {
-    formData.post(route('pieces.store'), {
-        preserveScroll: true,
+const submit = (form) => {
+    form.post(route('pieces.store'), {
         onSuccess: () => {
-            formData.reset();
-        },
-        onError: (errors) => {
-            console.error('Errores de validación:', errors);
+            form.reset();
         }
     });
 };
@@ -54,7 +46,6 @@ const submit = (formData) => {
                         <PieceForm
                             :blocks="blocks"
                             :old="old"
-                            :errors="errors"
                             :submit-button-text="'Crear Pieza'"
                             @submit="submit"
                         />

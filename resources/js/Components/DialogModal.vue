@@ -21,7 +21,7 @@ const emit = defineEmits(['close']);
 
 const close = () => {
     if (props.closeable) {
-        emit('close');
+    emit('close');
     }
 };
 

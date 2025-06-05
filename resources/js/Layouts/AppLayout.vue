@@ -1,19 +1,26 @@
     <script setup>
     import { ref } from 'vue';
     import { Head, Link, router } from '@inertiajs/vue3';
-    import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+    import ApplicationMark from '@/Components/ApplicationMark.vue';
     import Banner from '@/Components/Banner.vue';
     import Dropdown from '@/Components/Dropdown.vue';
     import DropdownLink from '@/Components/DropdownLink.vue';
     import NavLink from '@/Components/NavLink.vue';
     import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-    import Alert from '@/Components/Alert.vue';
 
     defineProps({
         title: String,
     });
 
     const showingNavigationDropdown = ref(false);
+
+    const switchToTeam = (team) => {
+        router.put(route('current-team.update'), {
+            team_id: team.id,
+        }, {
+            preserveState: false,
+        });
+    };
 
     const logout = () => {
         router.post(route('logout'));
@@ -35,7 +42,7 @@
                                 <!-- Logo -->
                                 <div class="shrink-0 flex items-center">
                                     <Link :href="route('dashboard')">
-                                        <h1 class="text-xl font-bold text-gray-800">Sistema de Gestión</h1>
+                                        <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
                                     </Link>
                                 </div>
 
@@ -139,11 +146,7 @@
 
                 <!-- Page Content -->
                 <main>
-                    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-                        <Alert type="success" />
-                        <Alert type="error" />
-                        <slot />
-                    </div>
+                    <slot />
                 </main>
             </div>
         </div>

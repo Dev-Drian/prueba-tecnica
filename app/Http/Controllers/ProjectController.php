@@ -17,9 +17,9 @@ class ProjectController extends Controller
             $projects = Project::orderBy('created_at', 'desc')
                              ->paginate(10);
             
-            return Inertia::render('Projects/Index', [
+        return Inertia::render('Projects/Index', [
                 'projects' => $projects
-            ]);
+        ]);
         } catch (\Exception $e) {
             return back()->with('error', 'Error al cargar los proyectos: ' . $e->getMessage());
         }

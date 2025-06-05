@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('codigo_pieza')->unique(); 
             $table->string('nombre');
             $table->decimal('peso_teorico', 8, 2); 
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
+            $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade'); 
             $table->enum('estado', ['Pendiente', 'Fabricada', 'En_Proceso'])->default('Pendiente');        
             $table->timestamps();
         });

@@ -7,40 +7,12 @@ import Banner from '@/Components/Banner.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import PieceDetailsModal from '@/Components/PieceDetailsModal.vue';
 import ActionButtons from '@/Components/ActionButtons.vue';
-import { ref, computed, onMounted } from 'vue';
-import { usePage } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
     pieces: {
         type: Object,
         required: true
-    },
-    flash: {
-        type: Object,
-        default: () => ({})
-    }
-});
-
-const page = usePage();
-const showAlert = ref(false);
-const alertMessage = ref('');
-const alertType = ref('success');
-
-onMounted(() => {
-    if (props.flash?.success) {
-        showAlert.value = true;
-        alertMessage.value = props.flash.success;
-        alertType.value = 'success';
-        setTimeout(() => {
-            showAlert.value = false;
-        }, 3000);
-    } else if (props.flash?.error) {
-        showAlert.value = true;
-        alertMessage.value = props.flash.error;
-        alertType.value = 'error';
-        setTimeout(() => {
-            showAlert.value = false;
-        }, 5000);
     }
 });
 
@@ -101,28 +73,6 @@ const paginationLinks = computed(() => {
 
         <Banner />
 
-        <!-- Alerta de éxito/error -->
-        <div v-if="showAlert" 
-             :class="{
-                 'bg-green-100 border-green-400 text-green-700': alertType === 'success',
-                 'bg-red-100 border-red-400 text-red-700': alertType === 'error'
-             }"
-             class="fixed top-4 right-4 px-4 py-3 rounded shadow-lg border-l-4 z-50">
-            <div class="flex items-center">
-                <div class="py-1">
-                    <svg v-if="alertType === 'success'" class="h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <svg v-else class="h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div>
-                    <p class="font-bold">{{ alertMessage }}</p>
-                </div>
-            </div>
-        </div>
-
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -154,12 +104,6 @@ const paginationLinks = computed(() => {
                                             Proyecto
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Peso Teórico
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Estado
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Acciones
                                         </th>
                                     </tr>
@@ -177,19 +121,6 @@ const paginationLinks = computed(() => {
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ piece.block?.project?.nombre }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ piece.peso_teorico }} kg
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            <span :class="{
-                                                'px-2 py-1 rounded-full text-xs font-medium': true,
-                                                'bg-yellow-100 text-yellow-800': piece.estado === 'Pendiente',
-                                                'bg-green-100 text-green-800': piece.estado === 'Fabricada',
-                                                'bg-blue-100 text-blue-800': piece.estado === 'En_Proceso'
-                                            }">
-                                                {{ piece.estado }}
-                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <ActionButtons

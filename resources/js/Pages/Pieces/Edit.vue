@@ -11,13 +11,19 @@ const props = defineProps({
     blocks: {
         type: Array,
         required: true
+    },
+    old: {
+        type: Object,
+        default: () => ({})
     }
 });
 
 const form = useForm({
     codigo_pieza: props.piece.codigo_pieza,
     nombre: props.piece.nombre,
-    block_id: props.piece.block_id
+    block_id: props.piece.block_id,
+    peso_teorico: props.piece.peso_teorico,
+    estado: props.piece.estado
 });
 
 const submit = (form) => {
@@ -44,6 +50,7 @@ const submit = (form) => {
                         <PieceForm
                             :piece="piece"
                             :blocks="blocks"
+                            :old="old"
                             :submit-button-text="'Actualizar Pieza'"
                             @submit="submit"
                         />

@@ -68,6 +68,16 @@ const handleClose = () => {
                     <h4 class="text-sm font-medium text-gray-500">Nombre de la Pieza</h4>
                     <p class="mt-1 text-sm text-gray-900 font-semibold">{{ piece.nombre }}</p>
                 </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="text-sm font-medium text-gray-500">Peso Teórico</h4>
+                    <p class="mt-1 text-sm text-gray-900 font-semibold">{{ piece.peso_teorico }} kg</p>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="text-sm font-medium text-gray-500">Estado</h4>
+                    <p class="mt-1 text-sm text-gray-900 font-semibold">{{ piece.estado }}</p>
+                </div>
                 
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <h4 class="text-sm font-medium text-gray-500">Bloque</h4>
@@ -80,22 +90,8 @@ const handleClose = () => {
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-lg">
-                    <h4 class="text-sm font-medium text-gray-500">Peso Teórico</h4>
-                    <p class="mt-1 text-sm text-gray-900 font-semibold">{{ piece.peso_teorico }} kg</p>
-                </div>
-
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <h4 class="text-sm font-medium text-gray-500">Estado</h4>
-                    <p class="mt-1 text-sm text-gray-900 font-semibold">
-                        <span :class="{
-                            'px-2 py-1 rounded-full text-xs font-medium': true,
-                            'bg-yellow-100 text-yellow-800': piece.estado === 'Pendiente',
-                            'bg-green-100 text-green-800': piece.estado === 'Fabricada',
-                            'bg-blue-100 text-blue-800': piece.estado === 'En_Proceso'
-                        }">
-                            {{ piece.estado }}
-                        </span>
-                    </p>
+                    <h4 class="text-sm font-medium text-gray-500">Creado por</h4>
+                    <p class="mt-1 text-sm text-gray-900 font-semibold">{{ piece.usuario?.name }}</p>
                 </div>
                 
                 <div class="bg-gray-50 p-4 rounded-lg">

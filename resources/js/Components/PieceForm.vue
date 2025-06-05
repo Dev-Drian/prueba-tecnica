@@ -14,17 +14,13 @@ const props = defineProps({
         type: Array,
         required: true
     },
-    submitButtonText: {
-        type: String,
-        default: 'Guardar'
-    },
-    errors: {
-        type: Object,
-        default: () => ({})
-    },
     old: {
         type: Object,
         default: () => ({})
+    },
+    submitButtonText: {
+        type: String,
+        default: 'Guardar'
     }
 });
 
@@ -33,13 +29,50 @@ const form = useForm({
     nombre: props.old.nombre || props.piece?.nombre || '',
     block_id: props.old.block_id || props.piece?.block_id || '',
     peso_teorico: props.old.peso_teorico || props.piece?.peso_teorico || '',
-    estado: props.old.estado || props.piece?.estado || 'Pendiente'
+    estado: props.old.estado || props.piece?.estado || 'Pendiente',
+    usuario_id: props.piece?.usuario_id || ''
 });
 
 const emit = defineEmits(['submit']);
 
+const validateForm = () => {
+    let isValid = true;
+    const errors = {};
+
+    if (!form.codigo_pieza.trim()) {
+        errors.codigo_pieza = 'El código de la pieza es requerido';
+        isValid = false;
+    }
+
+    if (!form.nombre.trim()) {
+        errors.nombre = 'El nombre de la pieza es requerido';
+        isValid = false;
+    }
+
+    if (!form.block_id) {
+        errors.block_id = 'Debe seleccionar un bloque';
+        isValid = false;
+    }
+
+    if (!form.peso_teorico || isNaN(form.peso_teorico) || form.peso_teorico <= 0) {
+        errors.peso_teorico = 'El peso teórico debe ser un número mayor a 0';
+        isValid = false;
+    }
+
+    if (!form.estado) {
+        errors.estado = 'Debe seleccionar un estado';
+        isValid = false;
+    }
+
+    form.errors = errors;
+    return isValid;
+};
+
 const submit = () => {
-    emit('submit', form);
+    if (validateForm()) {
+        console.log('Datos del formulario antes de enviar:', form.data());
+        emit('submit', form);
+    }
 };
 </script>
 
@@ -54,9 +87,8 @@ const submit = () => {
                 v-model="form.codigo_pieza"
                 required
                 autofocus
-                :class="{ 'border-red-500': errors.codigo_pieza }"
             />
-            <InputError :message="errors.codigo_pieza || form.errors.codigo_pieza" class="mt-2" />
+            <InputError :message="form.errors.codigo_pieza" class="mt-2" />
         </div>
 
         <div>
@@ -67,30 +99,8 @@ const submit = () => {
                 class="mt-1 block w-full"
                 v-model="form.nombre"
                 required
-                :class="{ 'border-red-500': errors.nombre }"
             />
-            <InputError :message="errors.nombre || form.errors.nombre" class="mt-2" />
-        </div>
-
-        <div>
-            <InputLabel for="block_id" value="Bloque" />
-            <select
-                id="block_id"
-                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                :class="{ 'border-red-500': errors.block_id }"
-                v-model="form.block_id"
-                required
-            >
-                <option value="">Seleccione un bloque</option>
-                <option
-                    v-for="block in blocks"
-                    :key="block.id"
-                    :value="block.id"
-                >
-                    {{ block.nombre }} ({{ block.project.nombre }})
-                </option>
-            </select>
-            <InputError :message="errors.block_id || form.errors.block_id" class="mt-2" />
+            <InputError :message="form.errors.nombre" class="mt-2" />
         </div>
 
         <div>
@@ -103,9 +113,8 @@ const submit = () => {
                 class="mt-1 block w-full"
                 v-model="form.peso_teorico"
                 required
-                :class="{ 'border-red-500': errors.peso_teorico }"
             />
-            <InputError :message="errors.peso_teorico || form.errors.peso_teorico" class="mt-2" />
+            <InputError :message="form.errors.peso_teorico" class="mt-2" />
         </div>
 
         <div>
@@ -113,15 +122,34 @@ const submit = () => {
             <select
                 id="estado"
                 class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                :class="{ 'border-red-500': errors.estado }"
                 v-model="form.estado"
                 required
             >
                 <option value="Pendiente">Pendiente</option>
-                <option value="En_Proceso">En Proceso</option>
                 <option value="Fabricada">Fabricada</option>
+                <option value="En_Proceso">En Proceso</option>
             </select>
-            <InputError :message="errors.estado || form.errors.estado" class="mt-2" />
+            <InputError :message="form.errors.estado" class="mt-2" />
+        </div>
+
+        <div>
+            <InputLabel for="block_id" value="Bloque" />
+            <select
+                id="block_id"
+                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                v-model="form.block_id"
+                required
+            >
+                <option value="">Seleccione un bloque</option>
+                <option
+                    v-for="block in blocks"
+                    :key="block.id"
+                    :value="block.id"
+                >
+                    {{ block.nombre }} ({{ block.project.nombre }})
+                </option>
+            </select>
+            <InputError :message="form.errors.block_id" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-end">
