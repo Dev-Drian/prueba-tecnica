@@ -16,7 +16,7 @@ class ProjectController extends Controller
         try {
             $projects = Project::orderBy('created_at', 'desc')
                              ->paginate(10);
-                             
+            
             return Inertia::render('Projects/Index', [
                 'projects' => $projects
             ]);

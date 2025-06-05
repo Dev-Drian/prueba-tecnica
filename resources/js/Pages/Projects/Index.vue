@@ -5,8 +5,8 @@ import { Link } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 import Banner from '@/Components/Banner.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
-import DialogModal from '@/Components/DialogModal.vue';
-import Pagination from '@/Components/Pagination.vue';
+import ProjectDetailsModal from '@/Components/ProjectDetailsModal.vue';
+import ActionButtons from '@/Components/ActionButtons.vue';
 import { ref } from 'vue';
 
 const props = defineProps({
@@ -33,6 +33,10 @@ const confirmProjectDeletion = (project) => {
 const showProjectDetails = (project) => {
     selectedProject.value = project;
     showingProjectDetails.value = true;
+};
+
+const handleEdit = (project) => {
+    window.location.href = route('projects.edit', project.id);
 };
 
 const deleteProject = () => {
@@ -100,26 +104,11 @@ const deleteProject = () => {
                                             {{ project.nombre }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                                                <button
-                                                    @click="showProjectDetails(project)"
-                                                    class="text-blue-600 hover:text-blue-900 transition duration-150 ease-in-out"
-                                                >
-                                                    Ver
-                                                </button>
-                                                <Link
-                                                    :href="route('projects.edit', project.id)"
-                                                    class="text-green-600 hover:text-green-900 transition duration-150 ease-in-out"
-                                                >
-                                                    Editar
-                                                </Link>
-                                                <button
-                                                    @click="confirmProjectDeletion(project)"
-                                                    class="text-red-600 hover:text-red-900 transition duration-150 ease-in-out"
-                                                >
-                                                    Eliminar
-                                                </button>
-                                            </div>
+                                            <ActionButtons
+                                                :on-view="() => showProjectDetails(project)"
+                                                :on-edit="() => handleEdit(project)"
+                                                :on-delete="() => confirmProjectDeletion(project)"
+                                            />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -127,8 +116,26 @@ const deleteProject = () => {
                         </div>
 
                         <!-- Paginación -->
-                        <div class="mt-6">
-                            <Pagination :links="projects.links" />
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-700">
+                                    Mostrando {{ projects.from }} a {{ projects.to }} de {{ projects.total }} resultados
+                                </div>
+                                <div class="flex space-x-2">
+                                    <Link
+                                        v-for="link in projects.links"
+                                        :key="link.label"
+                                        :href="link.url"
+                                        v-html="link.label"
+                                        class="px-3 py-1 rounded-md text-sm"
+                                        :class="{
+                                            'bg-blue-600 text-white': link.active,
+                                            'bg-gray-100 text-gray-700 hover:bg-gray-200': !link.active,
+                                            'opacity-50 cursor-not-allowed': !link.url
+                                        }"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -136,42 +143,12 @@ const deleteProject = () => {
         </div>
 
         <!-- Modal de Detalles del Proyecto -->
-        <DialogModal :show="showingProjectDetails" @close="showingProjectDetails = false">
-            <template #title>
-                Detalles del Proyecto
-            </template>
-
-            <template #content>
-                <div v-if="selectedProject" class="space-y-4">
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500">Código del Proyecto</h4>
-                        <p class="mt-1 text-sm text-gray-900">{{ selectedProject.codigo_proyecto }}</p>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500">Nombre del Proyecto</h4>
-                        <p class="mt-1 text-sm text-gray-900">{{ selectedProject.nombre }}</p>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500">Fecha de Creación</h4>
-                        <p class="mt-1 text-sm text-gray-900">{{ selectedProject.created_at }}</p>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500">Última Actualización</h4>
-                        <p class="mt-1 text-sm text-gray-900">{{ selectedProject.updated_at }}</p>
-                    </div>
-                </div>
-            </template>
-
-            <template #footer>
-                <button
-                    type="button"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
-                    @click="showingProjectDetails = false"
-                >
-                    Cerrar
-                </button>
-            </template>
-        </DialogModal>
+        <ProjectDetailsModal
+            v-if="selectedProject"
+            :show="showingProjectDetails"
+            :project="selectedProject"
+            @close="showingProjectDetails = false"
+        />
 
         <!-- Modal de Confirmación de Eliminación -->
         <ConfirmationModal :show="confirmingProjectDeletion" @close="confirmingProjectDeletion = false">
