@@ -135,126 +135,176 @@ const submit = () => {
 </script>
 
 <template>
-    <form @submit.prevent="submit" class="space-y-6">
-        <div>
-            <InputLabel for="project_id" value="Proyecto" class="form-label" />
-            <select
-                id="project_id"
-                class="form-input"
-                v-model="selectedProject"
-                required
-            >
-                <option value="">Seleccione un proyecto</option>
-                <option
-                    v-for="project in projects"
-                    :key="project.id"
-                    :value="project.id"
+    <form @submit.prevent="submit" class="space-y-4 sm:space-y-6">
+        <!-- Grid responsive para los selects principales -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <!-- Proyecto -->
+            <div>
+                <InputLabel for="project_id" value="Proyecto" class="form-label text-sm sm:text-base" />
+                <select
+                    id="project_id"
+                    class="form-input w-full text-sm sm:text-base"
+                    v-model="selectedProject"
+                    required
                 >
-                    {{ project.nombre }}
-                </option>
-            </select>
-            <InputError :message="form.errors.project_id" class="form-error" />
-        </div>
+                    <option value="">Seleccione un proyecto</option>
+                    <option
+                        v-for="project in projects"
+                        :key="project.id"
+                        :value="project.id"
+                    >
+                        {{ project.nombre }}
+                    </option>
+                </select>
+                <InputError :message="form.errors.project_id" class="form-error mt-1 text-xs sm:text-sm" />
+            </div>
 
-        <div>
-            <InputLabel for="block_id" value="Bloque" class="form-label" />
-            <select
-                id="block_id"
-                class="form-input"
-                v-model="selectedBlock"
-                required
-                :disabled="!selectedProject"
-            >
-                <option value="">Seleccione un bloque</option>
-                <option
-                    v-for="block in filteredBlocks"
-                    :key="block.id"
-                    :value="block.id"
+            <!-- Bloque -->
+            <div>
+                <InputLabel for="block_id" value="Bloque" class="form-label text-sm sm:text-base" />
+                <select
+                    id="block_id"
+                    class="form-input w-full text-sm sm:text-base"
+                    v-model="selectedBlock"
+                    required
+                    :disabled="!selectedProject"
+                    :class="{ 'bg-gray-100 cursor-not-allowed': !selectedProject }"
                 >
-                    {{ block.nombre }}
-                </option>
-            </select>
-            <InputError :message="form.errors.block_id" class="form-error" />
-        </div>
+                    <option value="">{{ selectedProject ? 'Seleccione un bloque' : 'Primero seleccione un proyecto' }}</option>
+                    <option
+                        v-for="block in filteredBlocks"
+                        :key="block.id"
+                        :value="block.id"
+                    >
+                        {{ block.nombre }}
+                    </option>
+                </select>
+                <InputError :message="form.errors.block_id" class="form-error mt-1 text-xs sm:text-sm" />
+            </div>
 
-        <div>
-            <InputLabel for="pieza_id" value="Pieza" class="form-label" />
-            <select
-                id="pieza_id"
-                class="form-input"
-                v-model="selectedPiece"
-                required
-                :disabled="!selectedBlock"
-            >
-                <option value="">Seleccione una pieza</option>
-                <option
-                    v-for="piece in filteredPieces"
-                    :key="piece.id"
-                    :value="piece"
+            <!-- Pieza -->
+            <div class="md:col-span-2 lg:col-span-1">
+                <InputLabel for="pieza_id" value="Pieza" class="form-label text-sm sm:text-base" />
+                <select
+                    id="pieza_id"
+                    class="form-input w-full text-sm sm:text-base"
+                    v-model="selectedPiece"
+                    required
+                    :disabled="!selectedBlock"
+                    :class="{ 'bg-gray-100 cursor-not-allowed': !selectedBlock }"
                 >
-                    {{ piece.codigo_pieza }} - {{ piece.nombre }}
-                </option>
-            </select>
-            <InputError :message="form.errors.pieza_id" class="form-error" />
+                    <option value="">{{ selectedBlock ? 'Seleccione una pieza' : 'Primero seleccione un bloque' }}</option>
+                    <option
+                        v-for="piece in filteredPieces"
+                        :key="piece.id"
+                        :value="piece"
+                    >
+                        {{ piece.codigo_pieza }} - {{ piece.nombre }}
+                    </option>
+                </select>
+                <InputError :message="form.errors.pieza_id" class="form-error mt-1 text-xs sm:text-sm" />
+            </div>
         </div>
 
-        <div>
-            <InputLabel for="peso_teorico" value="Peso Teórico (kg)" class="form-label" />
-            <TextInput
-                id="peso_teorico"
-                type="number"
-                step="0.01"
-                class="form-input bg-gray-100"
-                :value="pesoTeorico"
-                disabled
-            />
+        <!-- Sección de pesos - Grid responsive -->
+        <div class="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-200">
+            <h3 class="text-sm sm:text-base font-medium text-gray-900 mb-3 sm:mb-4">Información de Peso</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                <!-- Peso Teórico -->
+                <div>
+                    <InputLabel for="peso_teorico" value="Peso Teórico (kg)" class="form-label text-sm" />
+                    <TextInput
+                        id="peso_teorico"
+                        type="number"
+                        step="0.01"
+                        class="form-input bg-gray-100 w-full text-sm sm:text-base"
+                        :value="pesoTeorico"
+                        disabled
+                        placeholder="Automático"
+                    />
+                    <p class="text-xs text-gray-500 mt-1">Se completa automáticamente</p>
+                </div>
+
+                <!-- Peso Real -->
+                <div>
+                    <InputLabel for="peso_real" value="Peso Real (kg)" class="form-label text-sm" />
+                    <TextInput
+                        id="peso_real"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        class="form-input w-full text-sm sm:text-base"
+                        v-model="form.peso_real"
+                        required
+                        placeholder="Ingrese el peso real"
+                    />
+                    <InputError :message="form.errors.peso_real" class="form-error mt-1 text-xs sm:text-sm" />
+                </div>
+
+                <!-- Diferencia -->
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <InputLabel for="diferencia" value="Diferencia (kg)" class="form-label text-sm" />
+                    <TextInput
+                        id="diferencia"
+                        type="number"
+                        step="0.01"
+                        class="form-input bg-gray-100 w-full text-sm sm:text-base"
+                        :value="diferencia"
+                        disabled
+                        placeholder="Se calcula automáticamente"
+                        :class="{
+                            'text-red-600': diferencia && parseFloat(diferencia) > 0,
+                            'text-green-600': diferencia && parseFloat(diferencia) < 0,
+                            'text-gray-600': diferencia && parseFloat(diferencia) === 0
+                        }"
+                    />
+                    <p class="text-xs text-gray-500 mt-1">
+                        {{ diferencia > 0 ? 'Peso teórico mayor' : diferencia < 0 ? 'Peso teórico menor' : 'Pesos iguales' }}
+                    </p>
+                </div>
+            </div>
         </div>
 
+        <!-- Observaciones -->
         <div>
-            <InputLabel for="peso_real" value="Peso Real (kg)" class="form-label" />
-            <TextInput
-                id="peso_real"
-                type="number"
-                step="0.01"
-                min="0"
-                class="form-input"
-                v-model="form.peso_real"
-                required
-            />
-            <InputError :message="form.errors.peso_real" class="form-error" />
-        </div>
-
-        <div>
-            <InputLabel for="diferencia" value="Diferencia (kg)" class="form-label" />
-            <TextInput
-                id="diferencia"
-                type="number"
-                step="0.01"
-                class="form-input bg-gray-100"
-                :value="diferencia"
-                disabled
-            />
-        </div>
-
-        <div>
-            <InputLabel for="observaciones" value="Observaciones" class="form-label" />
+            <InputLabel for="observaciones" value="Observaciones" class="form-label text-sm sm:text-base" />
             <textarea
                 id="observaciones"
-                class="form-input"
+                class="form-input w-full text-sm sm:text-base resize-none"
                 v-model="form.observaciones"
                 rows="3"
+                placeholder="Ingrese observaciones adicionales (opcional)"
             ></textarea>
-            <InputError :message="form.errors.observaciones" class="form-error" />
+            <InputError :message="form.errors.observaciones" class="form-error mt-1 text-xs sm:text-sm" />
         </div>
 
-        <div class="flex items-center justify-end">
-            <PrimaryButton
-                class="btn-primary ml-4"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-            >
-                Registrar
-            </PrimaryButton>
+        <!-- Botones de acción -->
+        <div class="flex flex-col sm:flex-row items-center justify-between pt-4 sm:pt-6 border-t border-gray-200 space-y-3 sm:space-y-0">
+            <!-- Resumen del registro -->
+            <div v-if="selectedPiece && form.peso_real" class="text-xs sm:text-sm text-gray-600 bg-blue-50 p-2 sm:p-3 rounded-lg w-full sm:w-auto">
+                <p class="font-medium">Resumen del registro:</p>
+                <p>{{ selectedPiece.codigo_pieza }} - {{ selectedPiece.nombre }}</p>
+                <p>Peso: {{ form.peso_real }}kg ({{ diferencia > 0 ? '+' : '' }}{{ diferencia }}kg)</p>
+            </div>
+
+            <!-- Botón de envío -->
+            <div class="flex space-x-3 w-full sm:w-auto">
+                <button
+                    type="button"
+                    class="flex-1 sm:flex-none px-4 py-2 text-sm sm:text-base text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200"
+                    @click="$emit('cancel')"
+                >
+                    Cancelar
+                </button>
+                <PrimaryButton
+                    class="flex-1 sm:flex-none btn-primary px-6 py-2 text-sm sm:text-base"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing || !selectedPiece || !form.peso_real"
+                >
+                    <span v-if="form.processing">Registrando...</span>
+                    <span v-else>Registrar Pieza</span>
+                </PrimaryButton>
+            </div>
         </div>
     </form>
-</template> 
+</template>
