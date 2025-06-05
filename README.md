@@ -117,3 +117,103 @@ npm run build
 ## 📄 Licencia
 
 Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
+
+# Sistema de Registro de Piezas
+
+## Estructura de la Base de Datos
+
+### 1. Tabla de Usuarios (usuarios)
+```sql
+CREATE TABLE usuarios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255),
+    username VARCHAR(255) UNIQUE,
+    password VARCHAR(255),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+```
+**Justificación**: 
+- Se mantiene una tabla de usuarios para control de acceso y auditoría
+- El campo `username` es único para evitar duplicados
+- Se almacena el nombre completo para mejor identificación
+
+### 2. Tabla de Proyectos (projects)
+```sql
+CREATE TABLE projects (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    codigo_proyecto VARCHAR(255) UNIQUE,
+    nombre VARCHAR(255),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
+```
+
+- Se implementó soft delete (`deleted_at`) para mantener historial
+
+### 3. Tabla de Bloques (blocks)
+```sql
+CREATE TABLE blocks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    codigo_bloque VARCHAR(255) UNIQUE,
+    project_id INT,
+    nombre VARCHAR(255),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+```
+- Se implementó soft delete para mantener historial
+
+### 4. Tabla de Piezas (pieces)
+```sql
+CREATE TABLE pieces (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    block_id INT,
+    codigo_pieza VARCHAR(255) UNIQUE,
+    nombre VARCHAR(255),
+    peso_teorico DECIMAL(8,2),
+    usuario_id INT,
+    estado ENUM('Pendiente', 'Fabricada', 'En_Proceso') DEFAULT 'Pendiente',
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    FOREIGN KEY (block_id) REFERENCES blocks(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+```
+- Se agregó `estado` como ENUM para controlar el estado de fabricación
+- Se relaciona con bloques y usuarios
+- Se incluye `peso_teorico` como decimal para mayor precisión
+
+### 5. Tabla de Registros de Piezas (piece_records)
+```sql
+CREATE TABLE piece_records (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    pieza_id INT,
+    peso_real DECIMAL(8,2),
+    diferencia DECIMAL(8,2),
+    fecha_hora TIMESTAMP,
+    usuario_id INT,
+    observaciones TEXT NULL,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    FOREIGN KEY (pieza_id) REFERENCES pieces(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+```
+**Justificación**:
+- Esta tabla es crucial para el seguimiento y auditoría
+- Permite mantener un historial completo de los registros de peso
+- Calcula automáticamente la diferencia entre peso teórico y real
+- Registra quién realizó cada medición y cuándo
+- Permite agregar observaciones para casos especiales
+
+## Mejoras Implementadas
+
+1. **Auditoría**: Todas las tablas incluyen timestamps para seguimiento de cambios
+2. **Integridad Referencial**: Se implementaron claves foráneas con CASCADE para mantener la integridad
+3. **Soft Delete**: En proyectos y bloques para mantener historial
+4. **Precisión**: Uso de DECIMAL para pesos
+5. **Trazabilidad**: Registro de usuarios y fechas en todas las operaciones
