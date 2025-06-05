@@ -41,7 +41,8 @@ class PieceRecordController extends Controller
             return Inertia::render('PieceRecords/Create', [
                 'projects' => $projects,
                 'blocks' => $blocks,
-                'pieces' => $pieces
+                'pieces' => $pieces,
+                'oldData' => old()
             ]);
         } catch (\Exception $e) {
             return back()->with('error', 'Error al cargar el formulario: ' . $e->getMessage());
@@ -74,7 +75,7 @@ class PieceRecordController extends Controller
             return redirect()->route('piece-records.index')
                 ->with('success', 'Registro creado exitosamente');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al crear el registro: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Error al crear el registro: ' . $e->getMessage());
         }
     }
 

@@ -18,44 +18,41 @@ const props = defineProps({
     pieces: {
         type: Array,
         required: true
+    },
+    oldData: {
+        type: Object,
+        default: () => ({})
     }
 });
 
 const form = useForm({
-    project_id: '',
-    block_id: '',
-    pieza_id: '',
-    peso_real: '',
-    observaciones: ''
+    project_id: props.oldData.project_id || '',
+    block_id: props.oldData.block_id || '',
+    pieza_id: props.oldData.pieza_id || '',
+    peso_real: props.oldData.peso_real || '',
+    observaciones: props.oldData.observaciones || ''
 });
 
-const selectedProject = ref(null);
-const selectedBlock = ref(null);
-const selectedPiece = ref(null);
-const pesoTeorico = ref(null);
+const selectedProject = ref(props.oldData.project_id || null);
+const selectedBlock = ref(props.oldData.block_id || null);
+const selectedPiece = ref(props.oldData.pieza_id ? props.pieces.find(p => p.id === props.oldData.pieza_id) : null);
+const pesoTeorico = ref(selectedPiece.value?.peso_teorico || null);
 const diferencia = ref(null);
 
 // Filtrar bloques por proyecto seleccionado
 const filteredBlocks = computed(() => {
     if (!selectedProject.value) return [];
-    console.log('Filtrando bloques para proyecto:', selectedProject.value);
-    const blocks = props.blocks.filter(block => block.project_id === parseInt(selectedProject.value));
-    console.log('Bloques filtrados:', blocks);
-    return blocks;
+    return props.blocks.filter(block => block.project_id === parseInt(selectedProject.value));
 });
 
 // Filtrar piezas por bloque seleccionado
 const filteredPieces = computed(() => {
     if (!selectedBlock.value) return [];
-    console.log('Filtrando piezas para bloque:', selectedBlock.value);
-    const pieces = props.pieces.filter(piece => piece.block_id === parseInt(selectedBlock.value));
-    console.log('Piezas filtradas:', pieces);
-    return pieces;
+    return props.pieces.filter(piece => piece.block_id === parseInt(selectedBlock.value));
 });
 
 // Observar cambios en el proyecto seleccionado
 watch(selectedProject, (newValue) => {
-    console.log('Proyecto seleccionado:', newValue);
     form.project_id = newValue;
     form.block_id = '';
     form.pieza_id = '';
@@ -67,7 +64,6 @@ watch(selectedProject, (newValue) => {
 
 // Observar cambios en el bloque seleccionado
 watch(selectedBlock, (newValue) => {
-    console.log('Bloque seleccionado:', newValue);
     form.block_id = newValue;
     form.pieza_id = '';
     selectedPiece.value = null;
@@ -77,7 +73,6 @@ watch(selectedBlock, (newValue) => {
 
 // Observar cambios en la pieza seleccionada
 watch(selectedPiece, (newValue) => {
-    console.log('Pieza seleccionada:', newValue);
     if (newValue) {
         form.pieza_id = newValue.id;
         pesoTeorico.value = newValue.peso_teorico;
@@ -142,10 +137,10 @@ const submit = () => {
 <template>
     <form @submit.prevent="submit" class="space-y-6">
         <div>
-            <InputLabel for="project_id" value="Proyecto" />
+            <InputLabel for="project_id" value="Proyecto" class="form-label" />
             <select
                 id="project_id"
-                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                class="form-input"
                 v-model="selectedProject"
                 required
             >
@@ -158,14 +153,14 @@ const submit = () => {
                     {{ project.nombre }}
                 </option>
             </select>
-            <InputError :message="form.errors.project_id" class="mt-2" />
+            <InputError :message="form.errors.project_id" class="form-error" />
         </div>
 
         <div>
-            <InputLabel for="block_id" value="Bloque" />
+            <InputLabel for="block_id" value="Bloque" class="form-label" />
             <select
                 id="block_id"
-                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                class="form-input"
                 v-model="selectedBlock"
                 required
                 :disabled="!selectedProject"
@@ -179,14 +174,14 @@ const submit = () => {
                     {{ block.nombre }}
                 </option>
             </select>
-            <InputError :message="form.errors.block_id" class="mt-2" />
+            <InputError :message="form.errors.block_id" class="form-error" />
         </div>
 
         <div>
-            <InputLabel for="pieza_id" value="Pieza" />
+            <InputLabel for="pieza_id" value="Pieza" class="form-label" />
             <select
                 id="pieza_id"
-                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                class="form-input"
                 v-model="selectedPiece"
                 required
                 :disabled="!selectedBlock"
@@ -200,60 +195,61 @@ const submit = () => {
                     {{ piece.codigo_pieza }} - {{ piece.nombre }}
                 </option>
             </select>
-            <InputError :message="form.errors.pieza_id" class="mt-2" />
+            <InputError :message="form.errors.pieza_id" class="form-error" />
         </div>
 
         <div>
-            <InputLabel for="peso_teorico" value="Peso Teórico (kg)" />
+            <InputLabel for="peso_teorico" value="Peso Teórico (kg)" class="form-label" />
             <TextInput
                 id="peso_teorico"
                 type="number"
                 step="0.01"
-                class="mt-1 block w-full bg-gray-100"
+                class="form-input bg-gray-100"
                 :value="pesoTeorico"
                 disabled
             />
         </div>
 
         <div>
-            <InputLabel for="peso_real" value="Peso Real (kg)" />
+            <InputLabel for="peso_real" value="Peso Real (kg)" class="form-label" />
             <TextInput
                 id="peso_real"
                 type="number"
                 step="0.01"
                 min="0"
-                class="mt-1 block w-full"
+                class="form-input"
                 v-model="form.peso_real"
                 required
             />
-            <InputError :message="form.errors.peso_real" class="mt-2" />
+            <InputError :message="form.errors.peso_real" class="form-error" />
         </div>
 
         <div>
-            <InputLabel for="diferencia" value="Diferencia (kg)" />
+            <InputLabel for="diferencia" value="Diferencia (kg)" class="form-label" />
             <TextInput
                 id="diferencia"
                 type="number"
                 step="0.01"
-                class="mt-1 block w-full bg-gray-100"
+                class="form-input bg-gray-100"
                 :value="diferencia"
                 disabled
             />
         </div>
 
         <div>
-            <InputLabel for="observaciones" value="Observaciones" />
+            <InputLabel for="observaciones" value="Observaciones" class="form-label" />
             <textarea
                 id="observaciones"
-                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                class="form-input"
                 v-model="form.observaciones"
                 rows="3"
             ></textarea>
+            <InputError :message="form.errors.observaciones" class="form-error" />
         </div>
 
         <div class="flex items-center justify-end">
             <PrimaryButton
-                class="ml-4"
+                class="btn-primary ml-4"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
