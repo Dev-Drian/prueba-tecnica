@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('codigo_proyecto')->unique(); // Tu ID personalizado
             $table->string('nombre');
             $table->timestamps();
+            $table->softDeletes();
         });
     
     }
