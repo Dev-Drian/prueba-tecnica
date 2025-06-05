@@ -132,23 +132,23 @@ const closeModal = () => {
                                     </button>
                                 </div>
                                 
-                                <div class="grid grid-cols-2 gap-3 text-sm">
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
                                     <div>
-                                        <span class="text-gray-500 block">Peso Real:</span>
+                                        <span class="text-gray-500 block text-xs">Peso Real:</span>
                                         <span class="font-medium">{{ record.peso_real }} kg</span>
                                     </div>
                                     <div>
-                                        <span class="text-gray-500 block">Diferencia:</span>
+                                        <span class="text-gray-500 block text-xs">Diferencia:</span>
                                         <span class="font-medium">{{ record.diferencia }} kg</span>
                                     </div>
-                                    <div class="col-span-2 sm:col-span-1">
-                                        <span class="text-gray-500 block">Fecha:</span>
+                                    <div>
+                                        <span class="text-gray-500 block text-xs">Fecha:</span>
                                         <span class="font-medium text-xs sm:text-sm">
                                             {{ new Date(record.fecha_hora).toLocaleDateString() }}
                                         </span>
                                     </div>
-                                    <div class="col-span-2 sm:col-span-1">
-                                        <span class="text-gray-500 block">Usuario:</span>
+                                    <div>
+                                        <span class="text-gray-500 block text-xs">Usuario:</span>
                                         <span v-if="record.user" class="font-medium">{{ record.user.name }}</span>
                                         <span v-else class="text-red-500">No encontrado</span>
                                     </div>

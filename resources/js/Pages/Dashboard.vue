@@ -296,7 +296,7 @@ const totalStats = computed(() => {
                     </div>
 
                     <!-- Gráfico Circular -->
-                    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                         <div class="p-6">
                             <div class="h-96">
                                 <Pie :data="pieChartData" :options="pieChartOptions" />

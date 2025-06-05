@@ -8,6 +8,7 @@ use App\Http\Controllers\BlockController;
 use App\Http\Controllers\PieceController;
 use App\Http\Controllers\PieceRecordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,4 +43,7 @@ Route::middleware([
 
     // Rutas de Registros de Piezas
     Route::resource('piece-records', PieceRecordController::class);
+
+    // Rutas de Usuarios
+    Route::resource('users', UserController::class);
 });
