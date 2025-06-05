@@ -2,11 +2,12 @@
 import { Head } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Link } from '@inertiajs/vue3';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import Banner from '@/Components/Banner.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import BlockDetailsModal from '@/Components/BlockDetailsModal.vue';
 import ActionButtons from '@/Components/ActionButtons.vue';
+import Alert from '@/Components/Alert.vue';
 import { ref, computed } from 'vue';
 
 const props = defineProps({
@@ -24,6 +25,8 @@ const selectedBlock = ref(null);
 const form = useForm({
     _method: 'DELETE'
 });
+
+const flash = computed(() => usePage().props.flash);
 
 const confirmBlockDeletion = (block) => {
     blockToDelete.value = block;
@@ -70,6 +73,22 @@ const paginationLinks = computed(() => {
                 Bloques
             </h2>
         </template>
+
+        <Alert
+            v-if="flash.success"
+            :show="!!flash.success"
+            type="success"
+            :message="flash.success"
+            @close="flash.success = null"
+        />
+
+        <Alert
+            v-if="flash.error"
+            :show="!!flash.error"
+            type="error"
+            :message="flash.error"
+            @close="flash.error = null"
+        />
 
         <Banner />
 

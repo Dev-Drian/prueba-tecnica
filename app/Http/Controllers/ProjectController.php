@@ -21,7 +21,7 @@ class ProjectController extends Controller
                 'projects' => $projects
         ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar los proyectos: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar los proyectos: ' . $e->getMessage());
         }
     }
 
@@ -47,9 +47,9 @@ class ProjectController extends Controller
             Project::create($validated);
 
             return redirect()->route('projects.index')
-                ->with('success', 'Proyecto creado exitosamente');
+                ->with('flash.success', '¡Proyecto creado exitosamente!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al crear el proyecto: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al crear el proyecto: ' . $e->getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ class ProjectController extends Controller
                 'project' => $project
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar el proyecto: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar el proyecto: ' . $e->getMessage());
         }
     }
 
@@ -77,7 +77,7 @@ class ProjectController extends Controller
                 'project' => $project
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar el proyecto: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar el proyecto: ' . $e->getMessage());
         }
     }
 
@@ -95,9 +95,9 @@ class ProjectController extends Controller
             $project->update($validated);
 
             return redirect()->route('projects.index')
-                ->with('success', 'Proyecto actualizado exitosamente');
+                ->with('flash.success', '¡Proyecto actualizado exitosamente!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al actualizar el proyecto: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al actualizar el proyecto: ' . $e->getMessage());
         }
     }
 
@@ -109,9 +109,9 @@ class ProjectController extends Controller
         try {
             $project->delete();
             return redirect()->route('projects.index')
-                ->with('success', 'Proyecto eliminado exitosamente');
+                ->with('flash.success', '¡Proyecto eliminado exitosamente!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al eliminar el proyecto: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al eliminar el proyecto: ' . $e->getMessage());
         }
     }
 }

@@ -6,6 +6,22 @@
             </h2>
         </template>
 
+        <Alert
+            v-if="flash.success"
+            :show="!!flash.success"
+            type="success"
+            :message="flash.success"
+            @close="flash.success = null"
+        />
+
+        <Alert
+            v-if="flash.error"
+            :show="!!flash.error"
+            type="error"
+            :message="flash.error"
+            @close="flash.error = null"
+        />
+
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -118,15 +134,18 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
+import Alert from '@/Components/Alert.vue';
 
 const props = defineProps({
     users: Object
 });
+
+const flash = computed(() => usePage().props.flash);
 
 const paginationLinks = computed(() => {
     return props.users.links.filter(link => link.url !== null);

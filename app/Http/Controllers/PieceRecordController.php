@@ -22,7 +22,7 @@ class PieceRecordController extends Controller
                 'records' => $records
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar los registros: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar los registros: ' . $e->getMessage());
         }
     }
 
@@ -45,7 +45,7 @@ class PieceRecordController extends Controller
                 'oldData' => old()
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar el formulario: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar el formulario: ' . $e->getMessage());
         }
     }
 
@@ -73,9 +73,9 @@ class PieceRecordController extends Controller
             $piece->update(['estado' => 'Fabricada']);
 
             return redirect()->route('piece-records.index')
-                ->with('success', 'Registro creado exitosamente');
+                ->with('flash.success', '¡Registro creado exitosamente!');
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Error al crear el registro: ' . $e->getMessage());
+            return back()->withInput()->with('flash.error', 'Error al crear el registro: ' . $e->getMessage());
         }
     }
 
@@ -86,7 +86,7 @@ class PieceRecordController extends Controller
                 'record' => $record->load(['piece.block.project', 'user'])
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar el registro: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar el registro: ' . $e->getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ class PieceRecordController extends Controller
                 'record' => $record->load(['piece.block.project', 'user'])
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar el registro: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar el registro: ' . $e->getMessage());
         }
     }
 
@@ -118,9 +118,9 @@ class PieceRecordController extends Controller
             ]);
 
             return redirect()->route('piece-records.index')
-                ->with('success', 'Registro actualizado exitosamente');
+                ->with('flash.success', '¡Registro actualizado exitosamente!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al actualizar el registro: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al actualizar el registro: ' . $e->getMessage());
         }
     }
 
@@ -129,9 +129,9 @@ class PieceRecordController extends Controller
         try {
             $record->delete();
             return redirect()->route('piece-records.index')
-                ->with('success', 'Registro eliminado exitosamente');
+                ->with('flash.success', '¡Registro eliminado exitosamente!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al eliminar el registro: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al eliminar el registro: ' . $e->getMessage());
         }
     }
 } 

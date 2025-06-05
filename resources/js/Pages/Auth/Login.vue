@@ -42,7 +42,7 @@ const submit = () => {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h4M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
                 </div>
-                <h2 class="mt-6 text-3xl font-bold text-gray-900">Portal Empresarial</h2>
+                <h2 class="mt-6 text-3xl font-bold text-gray-900">COTECMAR PRUEBA AMCE</h2>
                 <p class="mt-2 text-sm text-gray-600">Accede a tu cuenta para continuar</p>
             </div>
 

@@ -20,7 +20,7 @@ class PieceController extends Controller
                 'pieces' => $pieces
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar las piezas: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar las piezas: ' . $e->getMessage());
         }
     }
 
@@ -33,7 +33,7 @@ class PieceController extends Controller
                 'old' => old()
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar el formulario: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar el formulario: ' . $e->getMessage());
         }
     }
 
@@ -65,11 +65,11 @@ class PieceController extends Controller
             \Log::info('Pieza creada exitosamente:', $piece->toArray());
 
             return redirect()->route('pieces.index')
-                ->with('success', 'Pieza creada exitosamente.');
+                ->with('flash.success', '¡Pieza creada exitosamente!');
         } catch (\Exception $e) {
             \Log::error('Error al crear pieza: ' . $e->getMessage());
             \Log::error($e->getTraceAsString());
-            return back()->withErrors(['error' => 'Error al crear la pieza: ' . $e->getMessage()]);
+            return back()->with('flash.error', 'Error al crear la pieza: ' . $e->getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ class PieceController extends Controller
                 'old' => old()
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar el formulario: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar el formulario: ' . $e->getMessage());
         }
     }
 
@@ -115,7 +115,7 @@ class PieceController extends Controller
             \Log::info('Pieza actualizada exitosamente:', $piece->fresh()->toArray());
 
             return redirect()->route('pieces.index')
-                ->with('success', 'Pieza actualizada exitosamente');
+                ->with('flash.success', '¡Pieza actualizada exitosamente!');
         } catch (\Illuminate\Validation\ValidationException $e) {
             \Log::error('Error de validación en actualización:', $e->errors());
             return back()
@@ -127,7 +127,7 @@ class PieceController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
             return back()
-                ->with('error', 'Error al actualizar la pieza: ' . $e->getMessage())
+                ->with('flash.error', 'Error al actualizar la pieza: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -136,9 +136,9 @@ class PieceController extends Controller
     {
         try {
             $piece->delete();
-            return back()->with('success', 'Pieza eliminada exitosamente');
+            return back()->with('flash.success', '¡Pieza eliminada exitosamente!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al eliminar la pieza: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al eliminar la pieza: ' . $e->getMessage());
         }
     }
 } 

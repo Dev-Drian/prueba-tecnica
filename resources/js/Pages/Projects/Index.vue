@@ -2,12 +2,13 @@
 import { Head } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Link } from '@inertiajs/vue3';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import Banner from '@/Components/Banner.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import ProjectDetailsModal from '@/Components/ProjectDetailsModal.vue';
 import ActionButtons from '@/Components/ActionButtons.vue';
-import { ref } from 'vue';
+import Alert from '@/Components/Alert.vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
     projects: {
@@ -15,6 +16,8 @@ const props = defineProps({
         required: true
     }
 });
+
+const flash = computed(() => usePage().props.flash);
 
 const confirmingProjectDeletion = ref(false);
 const projectToDelete = ref(null);
@@ -63,6 +66,22 @@ const deleteProject = () => {
                 Proyectos
             </h2>
         </template>
+
+        <Alert
+            v-if="flash.success"
+            :show="!!flash.success"
+            type="success"
+            :message="flash.success"
+            @close="flash.success = null"
+        />
+
+        <Alert
+            v-if="flash.error"
+            :show="!!flash.error"
+            type="error"
+            :message="flash.error"
+            @close="flash.error = null"
+        />
 
         <Banner />
 

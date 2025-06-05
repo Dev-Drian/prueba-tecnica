@@ -24,18 +24,23 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:usuarios',
-            'password' => 'required|string|min:8',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'username' => 'required|string|max:255|unique:usuarios',
+                'password' => 'required|string|min:8',
+            ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+            $validated['password'] = Hash::make($validated['password']);
 
-        User::create($validated);
+            User::create($validated);
 
-        return redirect()->route('users.index')
-            ->with('success', 'Usuario creado exitosamente.');
+            return redirect()->route('users.index')
+                ->with('flash.success', 'Usuario creado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('flash.error', 'Error al crear el usuario: ' . $e->getMessage());
+        }
     }
 
     public function edit(User $user)
@@ -47,29 +52,39 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:usuarios,username,' . $user->id,
-            'password' => 'nullable|string|min:8',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'username' => 'required|string|max:255|unique:usuarios,username,' . $user->id,
+                'password' => 'nullable|string|min:8',
+            ]);
 
-        if ($validated['password']) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
+            if ($validated['password']) {
+                $validated['password'] = Hash::make($validated['password']);
+            } else {
+                unset($validated['password']);
+            }
+
+            $user->update($validated);
+
+            return redirect()->route('users.index')
+                ->with('flash.success', 'Usuario actualizado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('flash.error', 'Error al actualizar el usuario: ' . $e->getMessage());
         }
-
-        $user->update($validated);
-
-        return redirect()->route('users.index')
-            ->with('success', 'Usuario actualizado exitosamente.');
     }
 
     public function destroy(User $user)
     {
-        $user->delete();
+        try {
+            $user->delete();
 
-        return redirect()->route('users.index')
-            ->with('success', 'Usuario eliminado exitosamente.');
+            return redirect()->route('users.index')
+                ->with('flash.success', 'Usuario eliminado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('flash.error', 'Error al eliminar el usuario: ' . $e->getMessage());
+        }
     }
 } 

@@ -3,7 +3,9 @@ import { Head, Link } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Banner from '@/Components/Banner.vue';
 import Modal from '@/Components/Modal.vue';
+import Alert from '@/Components/Alert.vue';
 import { ref, computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
     records: {
@@ -11,6 +13,8 @@ const props = defineProps({
         required: true
     }
 });
+
+const flash = computed(() => usePage().props.flash);
 
 const paginationLinks = computed(() => {
     return props.records.links.filter(link => link.url !== null);
@@ -37,6 +41,22 @@ const closeModal = () => {
                 Registros de Piezas
             </h2>
         </template>
+
+        <Alert
+            v-if="flash.success"
+            :show="!!flash.success"
+            type="success"
+            :message="flash.success"
+            @close="flash.success = null"
+        />
+
+        <Alert
+            v-if="flash.error"
+            :show="!!flash.error"
+            type="error"
+            :message="flash.error"
+            @close="flash.error = null"
+        />
 
         <Banner />
 

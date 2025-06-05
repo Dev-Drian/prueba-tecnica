@@ -23,7 +23,7 @@ class BlockController extends Controller
                 'blocks' => $blocks
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar los bloques: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar los bloques: ' . $e->getMessage());
         }
     }
 
@@ -53,9 +53,9 @@ class BlockController extends Controller
             Block::create($validated);
 
             return redirect()->route('blocks.index')
-                ->with('success', 'Bloque creado exitosamente');
+                ->with('flash.success', '¡Bloque creado exitosamente!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al crear el bloque: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al crear el bloque: ' . $e->getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ class BlockController extends Controller
                 'block' => $block->load('project')
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar el bloque: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar el bloque: ' . $e->getMessage());
         }
     }
 
@@ -85,7 +85,7 @@ class BlockController extends Controller
                 'projects' => $projects
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar el bloque: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al cargar el bloque: ' . $e->getMessage());
         }
     }
 
@@ -104,9 +104,9 @@ class BlockController extends Controller
             $block->update($validated);
 
             return redirect()->route('blocks.index')
-                ->with('success', 'Bloque actualizado exitosamente');
+                ->with('flash.success', '¡Bloque actualizado exitosamente!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al actualizar el bloque: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al actualizar el bloque: ' . $e->getMessage());
         }
     }
 
@@ -118,9 +118,9 @@ class BlockController extends Controller
         try {
             $block->delete();
             return redirect()->route('blocks.index')
-                ->with('success', 'Bloque eliminado exitosamente');
+                ->with('flash.success', '¡Bloque eliminado exitosamente!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al eliminar el bloque: ' . $e->getMessage());
+            return back()->with('flash.error', 'Error al eliminar el bloque: ' . $e->getMessage());
         }
     }
 } 
