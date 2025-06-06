@@ -36,7 +36,7 @@ const submit = (form) => {
 </script>
 
 <template>
-    <AppLayout title="Registrar Pieza">
+    <AppLayout title="Registro Pieza">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Registrar Pieza

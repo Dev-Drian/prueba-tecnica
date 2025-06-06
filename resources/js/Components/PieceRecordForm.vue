@@ -144,7 +144,6 @@ const submit = () => {
                 </svg>
             </div>
             <h3 class="text-2xl font-bold text-slate-800">Información de la Pieza</h3>
-            <p class="text-slate-500 mt-2">Complete los datos para registrar la nueva pieza</p>
         </div>
 
         <!-- Grid de selecciones principales -->
