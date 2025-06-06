@@ -12,35 +12,79 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Obtener piezas pendientes agrupadas por proyecto
-        $piezasPendientes = Piece::with(['block.project'])
+        // Obtener total de proyectos
+        $totalProjects = Project::count();
+
+        // Obtener total de piezas
+        $totalPieces = Piece::count();
+
+        // Obtener piezas pendientes
+        $pendingPieces = Piece::with(['block.project'])
             ->where('estado', 'Pendiente')
             ->get()
-            ->groupBy('block.project.nombre');
-
-        // Obtener estadísticas por proyecto
-        $estadisticasProyectos = Project::with(['blocks.pieces'])
-            ->get()
-            ->map(function ($project) {
-                $totalPiezas = $project->blocks->flatMap->pieces->count();
-                $piezasPendientes = $project->blocks->flatMap->pieces->where('estado', 'Pendiente')->count();
-                $piezasFabricadas = $project->blocks->flatMap->pieces->where('estado', 'Fabricada')->count();
-                $piezasEnProceso = $project->blocks->flatMap->pieces->where('estado', 'En_Proceso')->count();
-
+            ->map(function ($piece) {
                 return [
-                    'id' => $project->id,
-                    'nombre' => $project->nombre,
-                    'codigo' => $project->codigo_proyecto,
-                    'total_piezas' => $totalPiezas,
-                    'piezas_pendientes' => $piezasPendientes,
-                    'piezas_fabricadas' => $piezasFabricadas,
-                    'piezas_en_proceso' => $piezasEnProceso,
+                    'id' => $piece->id,
+                    'name' => $piece->nombre,
+                    'project' => $piece->block->project->nombre,
+                    'priority' => $piece->prioridad,
+                    'status' => $piece->estado,
+                    'progress' => $piece->progreso,
+                    'daysLate' => $piece->dias_retraso
                 ];
             });
 
+        // Obtener piezas completadas
+        $completedPieces = Piece::where('estado', 'Completado')->count();
+
+        // Obtener datos mensuales (compatible con SQLite)
+        $monthlyData = Piece::select(
+            DB::raw('strftime("%m", created_at) as month'),
+            DB::raw('COUNT(*) as total')
+        )
+        ->groupBy('month')
+        ->get();
+
+        // Obtener piezas por estado
+        $piecesByStatus = Piece::select('estado', DB::raw('COUNT(*) as count'))
+            ->groupBy('estado')
+            ->get()
+            ->map(function ($item) use ($totalPieces) {
+                return [
+                    'name' => $item->estado,
+                    'count' => $item->count,
+                    'percentage' => round(($item->count / $totalPieces) * 100)
+                ];
+            });
+
+        // Obtener actividades recientes
+        $recentActivities = Piece::with(['block.project'])
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($piece) {
+                return [
+                    'description' => "Pieza {$piece->nombre} actualizada en {$piece->block->project->nombre}",
+                    'created_at' => $piece->updated_at
+                ];
+            });
+
+        // Métricas de rendimiento
+        $performanceMetrics = [
+            'completionRate' => round(($completedPieces / $totalPieces) * 100),
+            'averageProgress' => Piece::avg('progreso'),
+            'onTimeDelivery' => Piece::where('dias_retraso', '<=', 0)->count()
+        ];
+
         return Inertia::render('Dashboard', [
-            'piezasPendientes' => $piezasPendientes,
-            'estadisticasProyectos' => $estadisticasProyectos
+            'totalProjects' => $totalProjects,
+            'totalPieces' => $totalPieces,
+            'pendingPieces' => $pendingPieces,
+            'completedPieces' => $completedPieces,
+            'monthlyData' => $monthlyData,
+            'piecesByStatus' => $piecesByStatus,
+            'recentActivities' => $recentActivities,
+            'performanceMetrics' => $performanceMetrics
         ]);
     }
 } 
